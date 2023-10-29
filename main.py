@@ -34,22 +34,30 @@ def fun_1(event):
 #creacion de frames
 frame_1 = Frame(raiz,bg="blue")
 frame_1.config(width=1200,height=720)
-frame_1.pack()
+frame_1.pack(fill="both",expand="True")
 
 #frame izquierdo
+frameIzquierdo = Frame(frame_1,bg="red")
+frameIzquierdo.config(width=350)
+frameIzquierdo.pack(side="left",fill="y")
+
+#frame tareas
+frameTareas = Frame(frameIzquierdo, bg="black")
+frameTareas.config(width=350,height=80)
+frameTareas.place(x=0,y=0)
 #-----------------------------------------------------------------------------------------------------
 
 
 #-----------------------------------------------------------------------------------------------------
 #Definicion de labels
-label_1 =   Label(frame_1,text="Menú de Tareas")
+label_1 =   Label(frameTareas,text="Modulo De Tareas")
 #-----------------------------------------------------------------------------------------------------
 
 
 #-----------------------------------------------------------------------------------------------------
 #configuracion de labels
-label_1.config(bg="blue",fg="white",cursor="hand2")
-label_1.place(x=500,y=200)
+label_1.config(bg="black",fg="white",cursor="hand2",font=("Roboto condensed",20))
+label_1.place(x=80,y=20)
 #-----------------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------------------------
