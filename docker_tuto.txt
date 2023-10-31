@@ -1,0 +1,15 @@
+comandos para iniciar en docker
+
+docker es una herramienta que nos permite correr aplicaciones en contenedores de forma rapida y portable
+
+1. docker run -d -p 8080:80 --name apache httpd   // comando para levantar un contenedor // instalo un servidor apache en local host
+2. docker ps // puedo ver los contenedores que tengo activos
+
+3. docker pull nginx // comando para descargar una imagen desde docker hub// es recomendable siempre descagar las versiones alpine porque pesas menos
+4. docker images //comadno para ver las imagenes de nuestro docker host.
+5. control + d para salir del contenedor
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+Procesos para contruccion de nuestra propia imagen
+1.where python
+2.vim app.py
