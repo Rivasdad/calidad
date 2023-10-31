@@ -13,3 +13,5 @@ docker es una herramienta que nos permite correr aplicaciones en contenedores de
 Procesos para contruccion de nuestra propia imagen
 1.where python
 2.vim app.py
+
+modificado
