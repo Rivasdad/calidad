@@ -3,7 +3,7 @@ from subprocess import call
 
 
 raiz = Tk()
-raiz.title("Inicio de sesion")
+raiz.title("Inicio de sesion ")
 raiz.geometry("900x550")
 raiz.resizable(0,0)
 raiz.config(bg="orange")
