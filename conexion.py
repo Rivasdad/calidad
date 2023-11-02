@@ -1,14 +1,15 @@
-import mysql.connector
+import psycopg2
 
 def conectar_a_base_de_datos():
     try:
-        conexion = mysql.connector.connect(
+        conexion = psycopg2.connect(
             host="localhost",
-            user="root",
-            password="",
-            database="prueba"
+            database="CalidadSoftware",
+            user="postgres",
+            password="root"
+            
         )
         return conexion
-    except mysql.connector.Error as error:
-        print(f"Error en la conexión a la base de datos: {error}")
+    except psycopg2.Error as error:
+        print(f"error al intentar conectarse a la abse de datos {error}")
         return None

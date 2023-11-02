@@ -2,6 +2,7 @@ from tkinter import *
 import re
 from tkinter import messagebox
 from conexion import conectar_a_base_de_datos
+from subprocess import call
 raiz = Tk()
 raiz.title("Registro")
 raiz.geometry("900x550")
@@ -20,6 +21,15 @@ frame_2.config(bg="#012269")
 
 
 #Funciones
+
+
+#Funcion para registrarme
+def regresar():
+    # Cierra la ventana actual
+    raiz.destroy()
+    
+    # Abre el archivo registro.py en una nueva ventana
+    call(["python", "Inicio.py"])
 #-------------------------------------------------------------------------------------------------------
 def entrar_registrar(event):
     registrar.config(bg="#B0E0E6")
@@ -32,8 +42,15 @@ def entrar_limpiar(event):
 
 def salir_limpiar(event):
     limpiar.config(bg="#87CEEB")
- #-------------------------------------------------------------------------------------------------------   
+ #-------------------------------------------------------------------------------------------------------
+def entrar_regresar(event):
+    Regresar.config(bg="#B0E0E6")
+    
+def salir_regresar(event):
+    Regresar.config(bg="#87CEEB")   
+
 def validar_campos():
+ #-------------------------------------------------------------------------------------------------------  
     # Obtener el contenido del campo "usuario"
     nombre = nombre_txt.get()
     ci = cedula_txt.get()
@@ -73,9 +90,9 @@ def validar_campos():
         conexion = conectar_a_base_de_datos()
         if conexion:
             cursor = conexion.cursor()                                                                                                          
-            sql = "INSERT INTO jefe(usuario,contraseña,nombre,cedula,cargo,rol,departamento,area,correo) VALUES ('"+usuario+"','"+contra+"','"+nombre+"','"+ci+"','"+cargo+"','administrador','"+departamento+"','"+area+"','"+correo+"')"
+            sql ="UPDATE usuario SET contraseña = '12' WHERE usuario = 'Rivasdad'"
             cursor.execute(sql)
-            conexion.commit()
+            conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
             cursor.close()
             conexion.close()
             print("Todo perfecto")
@@ -132,6 +149,10 @@ limpiar = Button(frame_2,width=30,font=("Roboto condensed", 13),text=("Limpiar C
 limpiar.place(x=279,y=320,height=31)
 limpiar.config(bg="#87CEEB",cursor="hand2")
 #-------------------------------------------------------------------------------------------------------
+Regresar= Button(frame_2,width=20,font=("Roboto condensed", 13),text=("Regresar"))
+Regresar.place(x=170,y=518,height=33)
+Regresar.config(bg="#87CEEB",cursor="hand2", command=regresar)
+
 #configuracion de botones
 
 registrar.bind("<Enter>", entrar_registrar)  
@@ -139,6 +160,9 @@ registrar.bind("<Leave>", salir_registrar)
 
 limpiar.bind("<Enter>", entrar_limpiar)  
 limpiar.bind("<Leave>", salir_limpiar)
+
+Regresar.bind("<Enter>", entrar_regresar)  
+Regresar.bind("<Leave>", salir_regresar) 
 
 #-------------------------------------------------------------------------------------------------------
  #configuracion de labels
