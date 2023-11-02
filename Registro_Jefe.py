@@ -65,22 +65,22 @@ def validar_campos():
     if nombre== "" or ci =="" or departamento =="" or area=="" or cargo=="" or usuario=="" or contra=="" or correo=="":
         print("Campos vacios!")
     #verificar si en el campo solo hay numeros  
-    elif not re.match("^[A-Za-zñÑ\s]*$", nombre):
+   # elif not re.match("^[A-Za-zñÑ\s]*$", nombre):
         messagebox.showwarning("Nombre y apellido invalido", "Por favor, Solo ingresa letras para tu nombre")
 #-------------------------------------------------------------------------------------------------------
-    elif not ci.isdigit():  #cedula
+    #elif not ci.isdigit():  #cedula
         messagebox.showwarning("cedula invlida", "Por favor, ingresa una cedula valida")
 #------------------------------------------------------------------------------------------------------- 
-    elif not re.match("^[A-Za-zñÑ\s]*$",departamento):
+    #elif not re.match("^[A-Za-zñÑ\s]*$",departamento):
         messagebox.showwarning("Nombre de departamento invalido", "Por favor, Solo ingresa letras para tu departamento")
 #-------------------------------------------------------------------------------------------------------
-    elif not re.match("^[A-Za-zñÑ\s]*$",area):
+    #elif not re.match("^[A-Za-zñÑ\s]*$",area):
         messagebox.showwarning("Nombre de area invalido", "Por favor, Solo ingresa letras para tu area")
 #-------------------------------------------------------------------------------------------------------
-    elif not re.match("^[A-Za-zñÑ\s]*$",cargo):
+    #elif not re.match("^[A-Za-zñÑ\s]*$",cargo):
         messagebox.showwarning("Nombre de cargo invalido", "Por favor, Solo ingresa letras para tu Cargo")
 #-------------------------------------------------------------------------------------------------------
-    elif not re.match ("^[A-Za-zñÑ\s-]*$",usuario):
+    #elif not re.match ("^[A-Za-zñÑ\s-]*$",usuario):
         print("el usuario no comprende con los parametros")
 #-------------------------------------------------------------------------------------------------------
     else:   #toda la validacion correcta
@@ -89,12 +89,12 @@ def validar_campos():
          print("")
         conexion = conectar_a_base_de_datos()
         if conexion:
-            cursor = conexion.cursor()                                                                                                          
-            sql ="UPDATE usuario SET contraseña = '12' WHERE usuario = 'Rivasdad'"
-            cursor.execute(sql)
-            conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
-            cursor.close()
-            conexion.close()
+            #cursor = conexion.cursor()                                                                                                          
+            #sql ="UPDATE usuario SET contraseña = '12' WHERE usuario = 'Rivasdad'"
+            #cursor.execute(sql)
+            #conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
+            #cursor.close()
+            #conexion.close()
             print("Todo perfecto")
 
 
