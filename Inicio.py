@@ -89,4 +89,3 @@ Boton_Registrarme.place(x=353,y=485,height=33)
 Boton_Registrarme.config(bg="#FFDE59",cursor="hand2", command=abrir_registro)
 
 raiz.mainloop()     
-
