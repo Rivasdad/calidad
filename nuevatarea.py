@@ -28,7 +28,7 @@ center_window(raiz,ancho_ventana, alto_ventana)
 
 frame_1 = Frame(raiz,bg="red")
 frame_1.config(width=350,height=140)
-frame_1.place(x=500,y=0)
+frame_1.place(x=800,y=50)
 #labels
 #-----------------------------------------------------------------------------------------------------
 label_1 = Label(raiz,text="Nombre de tarea")
@@ -47,16 +47,16 @@ label_1.config(font=("Roboto condensed Light", 13),fg="white",bg="#002D64")
 label_2.place(x=800,y=500)
 label_2.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 
-label_3.place(x=50,y=150)
+label_3.place(x=890,y=20)   #fecha de inicio
 label_3.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 
-label_4.place(x=50,y=200)
+label_4.place(x=500,y=20)
 label_4.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 
-label_5.place(x=50,y=400)
+label_5.place(x=110,y=95)   #cedula responsable
 label_5.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 
-label_6.place(x=50,y=450)
+label_6.place(x=500,y=95)   #estatus
 label_6.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 #-----------------------------------------------------------------------------------------------------
 
@@ -64,14 +64,16 @@ label_6.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 #-----------------------------------------------------------------------------------------------------
 NombreTarea =Entry(raiz,width=35,justify="center",font=("Roboto condensed Light", 13))
 
+ResponsableTarea = Entry(raiz,width=35,justify="center",font=("Roboto condensed Light", 13))
 
-ResponsableTarea = Entry(raiz,width=22,justify="center",font=("Roboto condensed Light", 13))
+CedulaResponsable = Entry(raiz,width=35,justify="center",font=("Roboto condensed Light", 13))
 #-----------------------------------------------------------------------------------------------------
 
 #configuracion de campos de texto
 #-----------------------------------------------------------------------------------------------------
 NombreTarea.place(x=50,y=50,height=24)
-ResponsableTarea.place(x=150,y=200,height=24) 
+ResponsableTarea.place(x=400,y=50,height=24) 
+CedulaResponsable.place(x=50,y=127)
 #-----------------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------------------------
@@ -86,6 +88,7 @@ descripcion.config(yscrollcommand=scrollbar.set)
 #combo box
 #-----------------------------------------------------------------------------------------------------
 #combo box para la fecha
+
 #ComboBox para el día
 combo_dia = ttk.Combobox(frame_1, values=list(range(1, 32)))
 combo_dia.set("Día")
@@ -97,8 +100,14 @@ combo_mes.set("Mes")
 combo_mes.place(x=100,y=50)
 
 # ComboBox para el año
-combo_año = ttk.Combobox(frame_1, values=list(range(2000, 2031)))
+combo_año = ttk.Combobox(frame_1, values=list(range(2023, 2100)))
 combo_año.set("Año")
 combo_año.place(x=100,y=100)
+
+#combo box para el estatus
+combo_estatus = ttk.Combobox(raiz,values="Iniciada")
+combo_estatus.set("Estatus Tarea")
+combo_estatus.place(x=400,y=130,height=28)
+combo_estatus.config(width=33,justify="center",font=("Roboto condensed Light", 13))
 # #-----------------------------------------------------------------------------------------------------
 raiz.mainloop()
