@@ -1,5 +1,6 @@
 #Menu principal
 from tkinter import *
+from subprocess import call
 raiz = Tk()
 raiz.title("Menu Principal")
 ancho_ventana = 1200
@@ -27,7 +28,12 @@ center_window(raiz,ancho_ventana, alto_ventana)
 
 #funcion para los label
 def fun_1(event):
-    frame_1.config(bg="red")
+    raiz.destroy()
+    call(["python","tareas.py"])
+
+def funsalir(event):
+    raiz.destroy()
+    call(["python","Inicio.py"])
 #-----------------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------------------------
@@ -75,24 +81,40 @@ frame_6.place(x=0,y=400)
 frame_7 = Frame(frameIzquierdo,bg="black")
 frame_7.config(width=350,height=80)
 frame_7.place(x=0,y=480)
+
+#frame
+frame_8 = Frame(frameIzquierdo,bg="white")
+frame_8.config(width=350,height=80)
+frame_8.place(x=0,y=560)
+
+#frame
+frame_9 = Frame(frameIzquierdo,bg="black")
+frame_9.config(width=350,height=80)
+frame_9.place(x=0,y=640)
 #-----------------------------------------------------------------------------------------------------
 
 
 #-----------------------------------------------------------------------------------------------------
 #Definicion de labels
 label_1 =   Label(frameTareas,text="Modulo De Tareas")
+salir = Label(frame_9,text="Cerrar sesion")
 #-----------------------------------------------------------------------------------------------------
 
 
 #-----------------------------------------------------------------------------------------------------
 #configuracion de labels
 label_1.config(bg="black",fg="white",cursor="hand2",font=("Roboto condensed",20))
-label_1.place(x=80,y=20)
+label_1.place(x=80,y=40)
+
+salir.config(bg="black",font=("Roboto condensed",20),fg="white",cursor="hand2")
+salir.place(x=100,y=20)
 #-----------------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------------------------
 #eventos de label
 label_1.bind("<Button-1>",fun_1)
+
+salir.bind("<Button-1>",funsalir)
 #-----------------------------------------------------------------------------------------------------
 
 raiz.mainloop()

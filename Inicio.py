@@ -72,21 +72,31 @@ contraseña_txt.place(x=332,y=410,height=27) #contraseña
 def abrir_registro():
     # Cierra la ventana actual
     raiz.destroy()
-    
     # Abre el archivo registro.py en una nueva ventana
     call(["python", "Registro_jefe.py"])
 
+#Funcion para registrarme
+def inicio_sesion():
+    # Cierra la ventana actual
+    raiz.destroy()
+    # Abre el archivo registro.py en una nueva ventana
+    call(["python", "main.py"])
+
+
+
+#-------------------------------------------------------------------------------------------------------
 #botones
 
 #boton iniciar sesion
 Boton_IniciarSesion= Button(frame_1,width=25,font=("Roboto condensed", 13),text=("Iniciar sesion"))
 Boton_IniciarSesion.place(x=353,y=448,height=33)
-Boton_IniciarSesion.config(bg="#FFDE59",cursor="hand2")
-
+Boton_IniciarSesion.config(bg="#FFDE59",cursor="hand2",command=inicio_sesion)
+#-------------------------------------------------------------------------------------------------------
 #boton registrarme
 Boton_Registrarme= Button(frame_1,width=25,font=("Roboto condensed", 13),text=("Registrarme"))
 Boton_Registrarme.place(x=353,y=485,height=33)
 Boton_Registrarme.config(bg="#FFDE59",cursor="hand2", command=abrir_registro)
+#-------------------------------------------------------------------------------------------------------
 
 raiz.mainloop()     
 
