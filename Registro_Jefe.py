@@ -112,6 +112,8 @@ def borrar_texto():
 #imagenes
 imagen_1=PhotoImage(file="registro_im.png")
 imagen_2 = PhotoImage(file ="logo.png")
+
+#-----------------------------------------------------------------------------------------------------
 # #labels
 
 label_1=Label(frame_1,image=imagen_1)              #imagen a la derecha colocado
@@ -210,7 +212,7 @@ departamento_txt.place(x=45,y=117,height=24)                           #departam
 area_txt.place(x=315,y=117,height=24)                                   #area
 #-------------------------------------------------------------------------------------------------------
 cargo_txt.place(x=45,y=192,height=24)                                  #cargo
-usuario_txt.place(x=315,y=192,height=24)                                #usuario
+usuario_txt.place(x=315,y=192,height=24)                                #usuario 
 #-------------------------------------------------------------------------------------------------------
 contraseña_txt.place(x=45,y=267,height=24)                                 #contraseña
 correo_txt.place(x=315,y=267,height=24)                             #correo
