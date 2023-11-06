@@ -89,12 +89,12 @@ def validar_campos():
          print("")
         conexion = conectar_a_base_de_datos()
         if conexion:
-            #cursor = conexion.cursor()                                                                                                          
-            #sql ="UPDATE usuario SET contraseña = '12' WHERE usuario = 'Rivasdad'"
-            #cursor.execute(sql)
-            #conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
-            #cursor.close()
-            #conexion.close()
+            cursor = conexion.cursor()                                                                                                          
+            sql ="UPDATE usuario SET contraseña = '17' WHERE usuario = 'Rivasdad'"
+            cursor.execute(sql)
+            conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
+            cursor.close()
+            conexion.close()
             print("Todo perfecto")
 
 

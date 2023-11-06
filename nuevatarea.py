@@ -1,6 +1,8 @@
 from tkinter import *
 from subprocess import call
 from tkinter import ttk
+from tkinter import messagebox
+from conexion import conectar_a_base_de_datos
 
 raiz = Tk()
 raiz.title("Creacion de nueva tarea")
@@ -24,9 +26,42 @@ def center_window(window, width, height):
     window.geometry(f"{width}x{height}+{x}+{y}")
 center_window(raiz,ancho_ventana, alto_ventana)
 
+#funion para obtener la fecha
+def obtener_fecha():
+   
+    dia = combo_dia.get()
+    mes = combo_mes.get()
+    año = combo_año.get()
+    fecha_seleccionada = f"{año}-{mes}-{dia}"
+    nombre_tarea_bd = NombreTarea.get()
+    responsable_bd = ResponsableTarea.get()
+    cedula_bd = CedulaResponsable.get()
+    estatus_bd= combo_estatus.get()
+    descripcion_bd= descripcion.get("1.0", "end-1c")
+
+    if dia == 'Día':
+        messagebox.showwarning("Dia invalido", "Ingresa un dia de tarea valido")
+    elif mes == 'Mes':
+        messagebox.showwarning("Mes invalido", "Ingresa un Mes de tarea valido")
+    elif año == 'Año':
+        messagebox.showwarning("Año invalido", "Ingresa un Año de tarea valido")
+
+    else:   #toda la validacion correcta
+        print("hola")
+        #registrar()
+            # cursor = conexion.cursor() 
+            # sql ="UPDATE usuario SET contraseña = '15' WHERE usuario = 'Rivasdad'"                                                                                                         
+            # #sql ="insert into tareas (nombre_tarea, responsable, cedula_responsable, estatus_tarea, descipcion_tarea, porcentaje_avance, fecha_inicio) values('"+nombre_tarea_bd+"','"+responsable_bd+"','"+cedula_bd+"','"+estatus_bd+"','"+descripcion_bd+"','0','"+fecha_seleccionada+"')'"
+            # cursor.execute(sql)
+            # conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
+            # cursor.close()
+            # conexion.close()
+            # print("Todo perfecto")
+
+
 #frame 
 
-frame_1 = Frame(raiz,bg="red")
+frame_1 = Frame(raiz,bg="#002D64")
 frame_1.config(width=350,height=140)
 frame_1.place(x=800,y=50)
 #labels
@@ -44,7 +79,7 @@ label_6 = Label(raiz,text="Estatus")
 label_1.place(x=135,y=20)
 label_1.config(font=("Roboto condensed Light", 13),fg="white",bg="#002D64")
 
-label_2.place(x=800,y=500)
+label_2.place(x=48,y=205)  #descripcion de tarea
 label_2.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 
 label_3.place(x=890,y=20)   #fecha de inicio
@@ -78,10 +113,10 @@ CedulaResponsable.place(x=50,y=127)
 
 #-----------------------------------------------------------------------------------------------------
 #texto de area
-descripcion = Text(raiz,width=10,height=5)
+descripcion = Text(raiz,width=137,height=20)
 descripcion.place(x=50,y=240)
 scrollbar = Scrollbar(raiz, command=descripcion.yview)  #scroll
-scrollbar.place(x=140,y=240,height=100) 
+scrollbar.place(x=1155,y=240,height=325) 
 descripcion.config(yscrollcommand=scrollbar.set)
 
 
@@ -110,4 +145,10 @@ combo_estatus.set("Estatus Tarea")
 combo_estatus.place(x=400,y=130,height=28)
 combo_estatus.config(width=33,justify="center",font=("Roboto condensed Light", 13))
 # #-----------------------------------------------------------------------------------------------------
+
+#botones.
+
+agregar = Button(raiz,text="agregar Tarea",command=obtener_fecha)
+agregar.config(height=1,width=20, cursor="hand2")
+agregar.place(x=500,y=650)
 raiz.mainloop()
