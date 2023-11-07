@@ -25,10 +25,7 @@ frame_2.config(bg="#012269")
 
 #Funcion para registrarme
 def regresar():
-    # Cierra la ventana actual
     raiz.destroy()
-    
-    # Abre el archivo registro.py en una nueva ventana
     call(["python", "Inicio.py"])
 #-------------------------------------------------------------------------------------------------------
 def entrar_registrar(event):

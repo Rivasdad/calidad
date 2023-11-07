@@ -12,6 +12,18 @@ raiz.config(bg="white")
 
 #funciones
 
+def fun_1(event):
+    raiz.destroy()
+    call(["python","nuevatarea.py"])
+
+def fun_2(event):
+    raiz.destroy()
+    call(["python","main.py"])
+
+def fun_3(event):
+    raiz.destroy()
+    call(["python","buscar_tareas.py"])
+
 #funcion para centrar la interfaz grafica
 def center_window(window, width, height):
     # Obtén el ancho y alto de la pantalla
@@ -48,6 +60,8 @@ label_1 = Label(frame_1,text="Agregar una Tarea")
 
 #label observar tareas
 label_2 =Label(frame_2,text="Buscar tareas")
+
+label_3 = Label(frame_1,text="Regresar")
 #-----------------------------------------------------------------------------------------------------
 #configuracion de labels
 label_1.config(bg="blue",fg="white",font=("Roboto condensed",20),cursor="hand2")
@@ -55,4 +69,13 @@ label_1.place(x=80,y=150)
 
 label_2.config(bg="orange",fg="white",font=("Roboto condensed",20),cursor="hand2")
 label_2.place(x=90,y=180)
+
+label_3.config(bg="blue",fg="white",font=("Roboto condensed",20),cursor="hand2")
+label_3.place(x=0,y=0)
+#botones de label
+label_1.bind("<Button-1>",fun_1)
+
+label_3.bind("<Button-1>",fun_2)
+
+label_2.bind("<Button-1>",fun_3)
 raiz.mainloop()

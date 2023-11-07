@@ -12,6 +12,10 @@ raiz.resizable(0,0)
 raiz.config(bg="#002D64")
 #funciones
 
+def regresar():
+    raiz.destroy()
+    call(["python", "tareas.py"])
+
 #funcion para centrar la interfaz grafica
 def center_window(window, width, height):
     # Obtén el ancho y alto de la pantalla
@@ -48,15 +52,15 @@ def obtener_fecha():
 
     else:   #toda la validacion correcta
         print("hola")
-        #registrar()
-            # cursor = conexion.cursor() 
-            # sql ="UPDATE usuario SET contraseña = '15' WHERE usuario = 'Rivasdad'"                                                                                                         
-            # #sql ="insert into tareas (nombre_tarea, responsable, cedula_responsable, estatus_tarea, descipcion_tarea, porcentaje_avance, fecha_inicio) values('"+nombre_tarea_bd+"','"+responsable_bd+"','"+cedula_bd+"','"+estatus_bd+"','"+descripcion_bd+"','0','"+fecha_seleccionada+"')'"
-            # cursor.execute(sql)
-            # conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
-            # cursor.close()
-            # conexion.close()
-            # print("Todo perfecto")
+        conexion = conectar_a_base_de_datos()
+        if conexion:
+            cursor = conexion.cursor() 
+            sql ="insert into tareas (nombre_tarea, responsable, cedula_responsable, estatus_tarea, descripcion_tarea, porcentaje_avance, fecha_inicio) values('"+nombre_tarea_bd+"','"+responsable_bd+"','"+cedula_bd+"','"+estatus_bd+"','"+descripcion_bd+"','0','"+fecha_seleccionada+"')"
+            cursor.execute(sql)
+            conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
+            cursor.close()
+            conexion.close()
+            print("Todo perfecto")
 
 
 #frame 
@@ -148,7 +152,13 @@ combo_estatus.config(width=33,justify="center",font=("Roboto condensed Light", 1
 
 #botones.
 
+#boton para agregar tareas
 agregar = Button(raiz,text="agregar Tarea",command=obtener_fecha)
 agregar.config(height=1,width=20, cursor="hand2")
 agregar.place(x=500,y=650)
+
+#boton pararegresar
+regresar = Button(raiz,text="Regresar",command=regresar)
+regresar.config(height=1,width=20, cursor="hand2")
+regresar.place(x=300,y=650)
 raiz.mainloop()
