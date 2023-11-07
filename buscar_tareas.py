@@ -2,7 +2,55 @@ from tkinter import   *
 from tkinter import ttk
 from conexion import conectar_a_base_de_datos
 from subprocess import call
+from tkinter import messagebox
 
+def prueba():
+    # NumeroTarea_txt.delete(0, "end")
+    Nombretarea_txt.delete(0, "end")
+    Responsable_txt.delete(0, "end")
+    cedula_txt.delete(0, "end")
+    Estatus_txt.delete(0, "end")
+    descripcion.delete("1.0", "end")
+    Avance_txt.delete(0, "end")
+    FechaInicio_txt.delete(0, "end")
+    FechaFin_txt.delete(0, "end")
+def filtro():
+    NumeroTarea_bd = NumeroTarea_txt.get()
+    Nombretarea_bd = Nombretarea_txt.get()
+    Responsable_db= Responsable_txt.get()
+    cedula_bd= cedula_txt.get()
+    Estatus_bd=Estatus_txt.get()
+    descripcion_bd= descripcion.get("1.0", "end-1c")
+    Avance_bd = Avance_txt.get()
+    FechaInicio_bd = FechaInicio_txt.get()
+    FechaFin_bd = FechaFin_txt.get()
+   
+
+    if NumeroTarea_bd:
+        conexion = conectar_a_base_de_datos()
+        sql="select * from tareas where numero_tarea ='"+NumeroTarea_bd+"'"
+        cursor = conexion.cursor() 
+        cursor.execute(sql)
+        conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
+        resultado = cursor.fetchone()
+
+    if resultado:
+        NumeroTarea_bd, Nombretarea_bd, Responsable_db, cedula_bd, Estatus_bd, descripcion_bd, Avance_bd, FechaInicio_bd, FechaFin_bd = resultado
+        prueba()
+        Nombretarea_txt.insert(0,Nombretarea_bd)
+        Responsable_txt.insert(0,Responsable_db)
+        cedula_txt.insert(0,cedula_bd)
+        Estatus_txt.insert(0,Estatus_bd)
+        Avance_txt.insert(0,Avance_bd)
+        FechaInicio_txt.insert(0,FechaInicio_bd)
+        FechaFin_txt.insert(0,FechaFin_bd)
+        descripcion.insert(INSERT,descripcion_bd)
+    else:
+        print("No se encontraron datos para el número de tarea especificado.")
+
+    cursor.close()
+    conexion.close()
+    print("Todo perfecto")
 
 def regresar():
     ventana.destroy()
@@ -17,13 +65,18 @@ def capturar_numero_tarea(event):
         NumeroTarea_txt.delete(0,"end")
         NumeroTarea_txt.insert(0,numero_tarea)
 
-def obtener_tareas():
-    # Obtener la conexión a la base de datos desde el archivo conexion.py
-    conexion = conectar_a_base_de_datos()
 
-    # Realizar una consulta para obtener los campos deseados
+def obtener_tareas():
+    conexion = conectar_a_base_de_datos()
     cursor = conexion.cursor()
-    cursor.execute("SELECT numero_tarea, nombre_tarea, responsable, cedula_responsable, estatus_tarea, porcentaje_avance, fecha_inicio, fecha_culminacion FROM tareas")
+    if NumeroTarea_txt.get():
+        cursor.execute("SELECT numero_tarea, nombre_tarea, responsable, cedula_responsable, estatus_tarea, porcentaje_avance, fecha_inicio, fecha_culminacion FROM tareas where numero_tarea = '"+NumeroTarea_txt.get()+"'")
+    elif cedula_txt.get():
+        cursor.execute("SELECT numero_tarea, nombre_tarea, responsable, cedula_responsable, estatus_tarea, porcentaje_avance, fecha_inicio, fecha_culminacion FROM tareas where cedula_responsable ='"+cedula_txt.get()+"'")
+    else:
+       cursor.execute("SELECT numero_tarea, nombre_tarea, responsable, cedula_responsable, estatus_tarea, porcentaje_avance, fecha_inicio, fecha_culminacion FROM tareas") 
+        
+    
     tareas = cursor.fetchall()
     conexion.close()
 
@@ -82,6 +135,10 @@ boton.place(x=0,y=600)
 
 regresar_b = ttk.Button(ventana, text="Regresar", cursor="hand2",command=regresar)
 regresar_b.place(x=100,y=600)
+
+buscar = ttk.Button(ventana, text="buscar tarea", cursor="hand2",command=filtro)
+buscar.place(x=200,y=600)
+# 
 
 tabla.bind("<<TreeviewSelect>>", capturar_numero_tarea)
 

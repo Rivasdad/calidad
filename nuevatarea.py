@@ -37,25 +37,40 @@ def obtener_fecha():
     mes = combo_mes.get()
     año = combo_año.get()
     fecha_seleccionada = f"{año}-{mes}-{dia}"
+
     nombre_tarea_bd = NombreTarea.get()
     responsable_bd = ResponsableTarea.get()
     cedula_bd = CedulaResponsable.get()
     estatus_bd= combo_estatus.get()
     descripcion_bd= descripcion.get("1.0", "end-1c")
 
-    if dia == 'Día':
+    dia_fin = combo_dia_fin.get()
+    mes_fin = combo_mes_fin.get()
+    año_fin = combo_año_fin.get()
+    fecha_seleccionada_fin = f"{año_fin}-{mes_fin}-{dia_fin}"
+    
+
+    if not dia.isnumeric():
         messagebox.showwarning("Dia invalido", "Ingresa un dia de tarea valido")
-    elif mes == 'Mes':
+    elif not mes.isnumeric():
         messagebox.showwarning("Mes invalido", "Ingresa un Mes de tarea valido")
-    elif año == 'Año':
+    elif not año.isnumeric():
         messagebox.showwarning("Año invalido", "Ingresa un Año de tarea valido")
+
+    elif not dia_fin.isnumeric():
+        messagebox.showwarning("dia de culminacion invalido", "Ingresa un dia de culminacion valido")
+    elif not mes_fin.isnumeric():
+        messagebox.showwarning("mes de culminacion invalido", "Ingresa un mes de culminacion  valido")
+    elif not año_fin.isnumeric():
+        messagebox.showwarning("año de culminacion invalido", "Ingresa un Año de culminacion valido")
+
 
     else:   #toda la validacion correcta
         print("hola")
         conexion = conectar_a_base_de_datos()
         if conexion:
             cursor = conexion.cursor() 
-            sql ="insert into tareas (nombre_tarea, responsable, cedula_responsable, estatus_tarea, descripcion_tarea, porcentaje_avance, fecha_inicio) values('"+nombre_tarea_bd+"','"+responsable_bd+"','"+cedula_bd+"','"+estatus_bd+"','"+descripcion_bd+"','0','"+fecha_seleccionada+"')"
+            sql ="insert into tareas (nombre_tarea, responsable, cedula_responsable, estatus_tarea, descripcion_tarea, porcentaje_avance, fecha_inicio, fecha_culminacion) values('"+nombre_tarea_bd+"','"+responsable_bd+"','"+cedula_bd+"','"+estatus_bd+"','"+descripcion_bd+"','0','"+fecha_seleccionada+"', '"+fecha_seleccionada_fin+"' )"
             cursor.execute(sql)
             conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
             cursor.close()
@@ -65,9 +80,13 @@ def obtener_fecha():
 
 #frame 
 
-frame_1 = Frame(raiz,bg="#002D64")
-frame_1.config(width=350,height=140)
-frame_1.place(x=800,y=50)
+frame_1 = Frame(raiz,bg="red") #fecha de inicio tarea
+frame_1.config(width=240,height=140)
+frame_1.place(x=700,y=50)
+
+frame_2 = Frame(raiz,bg="red") #fecha de fin tarea
+frame_2.config(width=240,height=140)
+frame_2.place(x=950,y=50)
 #labels
 #-----------------------------------------------------------------------------------------------------
 label_1 = Label(raiz,text="Nombre de tarea")
@@ -76,6 +95,7 @@ label_3 = Label(raiz,text="fecha de inicio")
 label_4 = Label(raiz,text="Responsable")
 label_5 = Label(raiz,text="Cedula del responsable")
 label_6 = Label(raiz,text="Estatus")
+label_7 = Label(raiz,text="fecha Culminacion")
 #-----------------------------------------------------------------------------------------------------
 
 #configuracion de labels
@@ -86,7 +106,7 @@ label_1.config(font=("Roboto condensed Light", 13),fg="white",bg="#002D64")
 label_2.place(x=48,y=205)  #descripcion de tarea
 label_2.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 
-label_3.place(x=890,y=20)   #fecha de inicio
+label_3.place(x=770,y=20)   #fecha de inicio
 label_3.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 
 label_4.place(x=500,y=20)
@@ -97,6 +117,9 @@ label_5.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 
 label_6.place(x=500,y=95)   #estatus
 label_6.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
+
+label_7.place(x=1000,y=20)   #estatus
+label_7.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 #-----------------------------------------------------------------------------------------------------
 
 #campos de texto
@@ -126,28 +149,48 @@ descripcion.config(yscrollcommand=scrollbar.set)
 
 #combo box
 #-----------------------------------------------------------------------------------------------------
-#combo box para la fecha
+#combo box para la fecha inicio
 
 #ComboBox para el día
 combo_dia = ttk.Combobox(frame_1, values=list(range(1, 32)))
 combo_dia.set("Día")
-combo_dia.place(x=100,y=0)
+combo_dia.place(x=50,y=0)
 
 # ComboBox para el mes
 combo_mes = ttk.Combobox(frame_1, values=["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
 combo_mes.set("Mes")
-combo_mes.place(x=100,y=50)
+combo_mes.place(x=50,y=50)
 
 # ComboBox para el año
 combo_año = ttk.Combobox(frame_1, values=list(range(2023, 2100)))
 combo_año.set("Año")
-combo_año.place(x=100,y=100)
+combo_año.place(x=50,y=100)
 
 #combo box para el estatus
 combo_estatus = ttk.Combobox(raiz,values="Iniciada")
 combo_estatus.set("Estatus Tarea")
 combo_estatus.place(x=400,y=130,height=28)
 combo_estatus.config(width=33,justify="center",font=("Roboto condensed Light", 13))
+# -------------------------------------------------------------------------------------------------------
+
+#combo box para la fecha fin
+
+#ComboBox para el día
+combo_dia_fin = ttk.Combobox(frame_2, values=list(range(1, 32)))
+combo_dia_fin.set("Día")
+combo_dia_fin.place(x=50,y=0)
+
+# ComboBox para el mes
+combo_mes_fin = ttk.Combobox(frame_2, values=["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
+combo_mes_fin.set("Mes")
+combo_mes_fin.place(x=50,y=50)
+
+# ComboBox para el año
+combo_año_fin = ttk.Combobox(frame_2, values=list(range(2023, 2100)))
+combo_año_fin.set("Año")
+combo_año_fin.place(x=50,y=100)
+
+
 # #-----------------------------------------------------------------------------------------------------
 
 #botones.

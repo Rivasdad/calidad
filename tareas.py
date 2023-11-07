@@ -12,6 +12,7 @@ raiz.config(bg="white")
 
 #funciones
 
+
 def fun_1(event):
     raiz.destroy()
     call(["python","nuevatarea.py"])

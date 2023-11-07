@@ -1,5 +1,4 @@
 from tkinter import *
-import re
 from tkinter import messagebox
 from conexion import conectar_a_base_de_datos
 from subprocess import call
@@ -25,7 +24,10 @@ frame_2.config(bg="#012269")
 
 #Funcion para registrarme
 def regresar():
+    # Cierra la ventana actual
     raiz.destroy()
+    
+    # Abre el archivo registro.py en una nueva ventana
     call(["python", "Inicio.py"])
 #-------------------------------------------------------------------------------------------------------
 def entrar_registrar(event):
@@ -87,7 +89,7 @@ def validar_campos():
         conexion = conectar_a_base_de_datos()
         if conexion:
             cursor = conexion.cursor()                                                                                                          
-            sql ="UPDATE usuario SET contraseña = '17' WHERE usuario = 'Rivasdad'"
+            sql ="UPDATE usuario SET contraseña = '12' WHERE usuario = 'Rivasdad'"
             cursor.execute(sql)
             conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
             cursor.close()
