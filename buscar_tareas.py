@@ -3,6 +3,7 @@ from tkinter import ttk
 from conexion import conectar_a_base_de_datos
 from subprocess import call
 from tkinter import messagebox
+import psycopg2
 
 def prueba():
     # NumeroTarea_txt.delete(0, "end")
@@ -14,6 +15,24 @@ def prueba():
     Avance_txt.delete(0, "end")
     FechaInicio_txt.delete(0, "end")
     FechaFin_txt.delete(0, "end")
+
+#funcion para modificar la tarea
+def modificar():
+    try:
+        conexion = conectar_a_base_de_datos()
+        sql="update tareas set nombre_tarea ='"+Nombretarea_txt.get()+"',responsable='"+Responsable_txt.get()+"',estatus_tarea ='"+Estatus_txt.get()+"',porcentaje_avance='"+Avance_txt.get()+"',fecha_culminacion ='"+FechaFin_txt.get()+"' where numero_tarea ='"+NumeroTarea_txt.get()+"' "
+        cursor = conexion.cursor() 
+        cursor.execute(sql)
+        conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
+        resultado = cursor.fetchone() 
+    except (Exception, psycopg2.DatabaseError) as error: 
+        messagebox.showwarning("Error al modificar", "Error al intentar modificar registro")
+
+
+    #funcion para filtrar las tareas en la tabla
+def capturar_campos():
+    print("")
+    
 def filtro():
     NumeroTarea_bd = NumeroTarea_txt.get()
     Nombretarea_bd = Nombretarea_txt.get()
@@ -24,8 +43,6 @@ def filtro():
     Avance_bd = Avance_txt.get()
     FechaInicio_bd = FechaInicio_txt.get()
     FechaFin_bd = FechaFin_txt.get()
-   
-
     if NumeroTarea_bd:
         conexion = conectar_a_base_de_datos()
         sql="select * from tareas where numero_tarea ='"+NumeroTarea_bd+"'"
@@ -47,15 +64,17 @@ def filtro():
         descripcion.insert(INSERT,descripcion_bd)
     else:
         print("No se encontraron datos para el número de tarea especificado.")
-
     cursor.close()
     conexion.close()
     print("Todo perfecto")
 
+
+#funcion para regresar al modulo anterior
 def regresar():
     ventana.destroy()
     call(["python", "tareas.py"])
 
+#funcion para capturar el numero d tarea cuando se da click en la tabla
 def capturar_numero_tarea(event):
     seleccion = tabla.selection()
     if seleccion:
@@ -65,7 +84,7 @@ def capturar_numero_tarea(event):
         NumeroTarea_txt.delete(0,"end")
         NumeroTarea_txt.insert(0,numero_tarea)
 
-
+#funcion para buscar una tarea especifica
 def obtener_tareas():
     conexion = conectar_a_base_de_datos()
     cursor = conexion.cursor()
@@ -75,8 +94,6 @@ def obtener_tareas():
         cursor.execute("SELECT numero_tarea, nombre_tarea, responsable, cedula_responsable, estatus_tarea, porcentaje_avance, fecha_inicio, fecha_culminacion FROM tareas where cedula_responsable ='"+cedula_txt.get()+"'")
     else:
        cursor.execute("SELECT numero_tarea, nombre_tarea, responsable, cedula_responsable, estatus_tarea, porcentaje_avance, fecha_inicio, fecha_culminacion FROM tareas") 
-        
-    
     tareas = cursor.fetchall()
     conexion.close()
 
@@ -138,7 +155,10 @@ regresar_b.place(x=100,y=600)
 
 buscar = ttk.Button(ventana, text="buscar tarea", cursor="hand2",command=filtro)
 buscar.place(x=200,y=600)
-# 
+
+actualizar = ttk.Button(ventana, text="Actualizar Tarea", cursor="hand2",command=modificar)
+actualizar.place(x=400,y=600)
+
 
 tabla.bind("<<TreeviewSelect>>", capturar_numero_tarea)
 

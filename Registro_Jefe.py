@@ -1,7 +1,9 @@
 from tkinter import *
-from tkinter import messagebox
+from tkinter import messagebox 
 from conexion import conectar_a_base_de_datos
 from subprocess import call
+from tkinter import ttk
+import psycopg2
 raiz = Tk()
 raiz.title("Registro")
 raiz.geometry("900x550")
@@ -53,9 +55,9 @@ def validar_campos():
     # Obtener el contenido del campo "usuario"
     nombre = nombre_txt.get()
     ci = cedula_txt.get()
-    departamento = departamento_txt.get()
-    area = area_txt.get()
-    cargo = cargo_txt.get()
+    departamento = combo_departamento.get()
+    area = combo_area.get()
+    cargo = combo_cargo.get()
     usuario = usuario_txt.get()
     contra = contraseña_txt.get()
     correo = correo_txt.get()
@@ -83,27 +85,29 @@ def validar_campos():
        # print("el usuario no comprende con los parametros")
 #-------------------------------------------------------------------------------------------------------
     else:   #toda la validacion correcta
-        print("esta entrando al else")
         def registrar():
          print("")
-        conexion = conectar_a_base_de_datos()
-        if conexion:
-            cursor = conexion.cursor()                                                                                                          
-            sql ="UPDATE usuario SET contraseña = '12' WHERE usuario = 'Rivasdad'"
+        try:
+            conexion = conectar_a_base_de_datos()
+            if conexion:
+                 cursor = conexion.cursor()  
+            if cargo == "Gerente":
+                rol = "Gerente"   
+            else:
+                rol = "trabajador"                                                                                                      
+            sql ="insert into usuario (usuario, contraseña, cedula, nombre, departamento, area, cargo, correo, rol) values('"+usuario+"','"+contra+"','"+ci+"','"+nombre+"','"+departamento+"','"+area+"','"+cargo+"', '"+correo+"', '"+rol+"' )"
             cursor.execute(sql)
-            conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
+            conexion.commit()
             cursor.close()
             conexion.close()
-            print("Todo perfecto")
-
-
+            messagebox.showwarning("Usuario Registrado", "Usuario Registrado Correctamente")
+        except (Exception, psycopg2.DatabaseError) as error:
+            messagebox.showwarning("Error", "Error al intentar registrar usuario") 
 #------------------------------------------------------------------------------------------------------- 
 def borrar_texto():
     nombre_txt.delete(0, 'end') 
     cedula_txt.delete(0, 'end')
-    departamento_txt.delete(0, 'end')
-    area_txt.delete(0, 'end')
-    cargo_txt.delete(0, 'end')
+    
     usuario_txt.delete(0, 'end')
     contraseña_txt.delete(0, 'end')
     correo_txt.delete(0, 'end')
@@ -132,9 +136,9 @@ Titulo = Label(frame_2,text="Calidad de Software")  #calidad de software
 #caja de texto
 nombre_txt =Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
 cedula_txt = Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
-departamento_txt =Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
-area_txt= Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
-cargo_txt= Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
+# departamento_txt =Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
+# area_txt= Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
+#cargo_txt= Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
 usuario_txt= Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
 contraseña_txt= Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
 correo_txt= Entry(frame_2,width=22,justify="center",font=("Roboto condensed Light", 13))
@@ -207,13 +211,28 @@ label_9.place(x=376,y=235)
 nombre_txt.place(x=45,y=42,height=24)                                  #Nombre y apellido
 cedula_txt.place(x=315,y=42,height=24)                                 #cedula
 #-------------------------------------------------------------------------------------------------------
-departamento_txt.place(x=45,y=117,height=24)                           #departamento
-area_txt.place(x=315,y=117,height=24)                                   #area
+                                   #area
 #-------------------------------------------------------------------------------------------------------
-cargo_txt.place(x=45,y=192,height=24)                                  #cargo
+                                #cargo
 usuario_txt.place(x=315,y=192,height=24)                                #usuario 
 #-------------------------------------------------------------------------------------------------------
 contraseña_txt.place(x=45,y=267,height=24)                                 #contraseña
 correo_txt.place(x=315,y=267,height=24)                             #correo
 
+
+# combo box
+# ComboBox para el departamkento
+combo_departamento = ttk.Combobox(frame_2, values="Tecnologia",justify="center")
+combo_departamento.set("")
+combo_departamento.place(x=48,y=120,width=180,height=25)
+
+# ComboBox para el area
+combo_area = ttk.Combobox(frame_2, values=["Calidad de Software"],justify="center")
+combo_area.set("")
+combo_area.place(x=315,y=120,width=180,height=25)
+
+# ComboBox para el cargo
+combo_cargo = ttk.Combobox(frame_2, values=["Gerente","Contratado","Farservice","Becario","ince"],justify="center")
+combo_cargo.set("")
+combo_cargo.place(x=48,y=195,width=180,height=25)
 raiz.mainloop()
