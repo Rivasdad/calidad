@@ -3,20 +3,69 @@ from subprocess import call
 from tkinter import ttk
 from tkinter import messagebox
 from conexion import conectar_a_base_de_datos
+import subprocess
+import sys
+import psycopg2
 
+#-----------------------------------------------------------------------------------------------------
 raiz = Tk()
 raiz.title("Creacion de nueva tarea")
 ancho_ventana = 1200
 alto_ventana = 720
 raiz.resizable(0,0)
 raiz.config(bg="#002D64")
-#funciones
+#-----------------------------------------------------------------------------------------------------
 
+
+ResponsableTarea = Entry(raiz,width=35,justify="center",font=("Roboto condensed Light", 13))
+CedulaResponsable = Entry(raiz,width=35,justify="center",font=("Roboto condensed Light", 13))
+#funciones
+#-----------------------------------------------------------------------------------------------------
+Usuario = ''
+Contraseña = ''
+if __name__ == "__main__":
+    # Recibir los datos de usuario y contraseña como argumentos
+    Usuario = sys.argv[1]
+    Contraseña = sys.argv[2]
+    try:
+        conexion = conectar_a_base_de_datos()
+        if conexion:
+            cursor = conexion.cursor() 
+            sql ="select cedula, nombre from usuario where usuario = '"+Usuario+"'"
+            cursor.execute(sql)
+            conexion.commit()  
+            resultado = cursor.fetchone()
+            cursor.close()
+            conexion.close()
+            
+            nombre_bd =''
+            cedula_bd =''
+            if resultado:
+                nombre_bd,cedula_bd= resultado
+                ResponsableTarea.insert(0,cedula_bd)
+                CedulaResponsable.insert(0,nombre_bd)
+        
+    except (Exception, psycopg2.DatabaseError) as error:  
+         messagebox.showwarning("Usuario no encontrado", "El usuario no ha sido encontrado")
+        
+#-----------------------------------------------------------------------------------------------------
+   
+
+#-----------------------------------------------------------------------------------------------------
 def regresar():
+    subprocess.Popen(['python', 'tareas.py', Usuario, Contraseña])
     raiz.destroy()
-    call(["python", "tareas.py"])
+    
+
+#boton pararegresar
+regresar = Button(raiz,text="Regresar",command=regresar)
+regresar.config(height=1,width=20, cursor="hand2")
+regresar.place(x=300,y=650)
+#-----------------------------------------------------------------------------------------------------    
+
 
 #funcion para centrar la interfaz grafica
+#-----------------------------------------------------------------------------------------------------
 def center_window(window, width, height):
     # Obtén el ancho y alto de la pantalla
     screen_width = window.winfo_screenwidth()
@@ -29,8 +78,11 @@ def center_window(window, width, height):
     # Establece las coordenadas de la ventana
     window.geometry(f"{width}x{height}+{x}+{y}")
 center_window(raiz,ancho_ventana, alto_ventana)
+#-----------------------------------------------------------------------------------------------------
+
 
 #funion para obtener la fecha
+#-----------------------------------------------------------------------------------------------------
 def obtener_fecha():
    
     dia = combo_dia.get()
@@ -49,7 +101,7 @@ def obtener_fecha():
     año_fin = combo_año_fin.get()
     fecha_seleccionada_fin = f"{año_fin}-{mes_fin}-{dia_fin}"
     
-
+#-----------------------------------------------------------------------------------------------------
     if not dia.isnumeric():
         messagebox.showwarning("Dia invalido", "Ingresa un dia de tarea valido")
     elif not mes.isnumeric():
@@ -63,8 +115,6 @@ def obtener_fecha():
         messagebox.showwarning("mes de culminacion invalido", "Ingresa un mes de culminacion  valido")
     elif not año_fin.isnumeric():
         messagebox.showwarning("año de culminacion invalido", "Ingresa un Año de culminacion valido")
-
-
     else:   #toda la validacion correcta
         print("hola")
         conexion = conectar_a_base_de_datos()
@@ -76,10 +126,11 @@ def obtener_fecha():
             cursor.close()
             conexion.close()
             print("Todo perfecto")
+#-----------------------------------------------------------------------------------------------------
 
 
 #frame 
-
+#-----------------------------------------------------------------------------------------------------
 frame_1 = Frame(raiz,bg="red") #fecha de inicio tarea
 frame_1.config(width=240,height=140)
 frame_1.place(x=700,y=50)
@@ -87,6 +138,8 @@ frame_1.place(x=700,y=50)
 frame_2 = Frame(raiz,bg="red") #fecha de fin tarea
 frame_2.config(width=240,height=140)
 frame_2.place(x=950,y=50)
+#-----------------------------------------------------------------------------------------------------
+
 #labels
 #-----------------------------------------------------------------------------------------------------
 label_1 = Label(raiz,text="Nombre de tarea")
@@ -97,6 +150,7 @@ label_5 = Label(raiz,text="Cedula del responsable")
 label_6 = Label(raiz,text="Estatus")
 label_7 = Label(raiz,text="fecha Culminacion")
 #-----------------------------------------------------------------------------------------------------
+
 
 #configuracion de labels
 #-----------------------------------------------------------------------------------------------------
@@ -122,14 +176,15 @@ label_7.place(x=1000,y=20)   #estatus
 label_7.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
 #-----------------------------------------------------------------------------------------------------
 
+
 #campos de texto
 #-----------------------------------------------------------------------------------------------------
 NombreTarea =Entry(raiz,width=35,justify="center",font=("Roboto condensed Light", 13))
 
-ResponsableTarea = Entry(raiz,width=35,justify="center",font=("Roboto condensed Light", 13))
 
-CedulaResponsable = Entry(raiz,width=35,justify="center",font=("Roboto condensed Light", 13))
+
 #-----------------------------------------------------------------------------------------------------
+
 
 #configuracion de campos de texto
 #-----------------------------------------------------------------------------------------------------
@@ -137,6 +192,14 @@ NombreTarea.place(x=50,y=50,height=24)
 ResponsableTarea.place(x=400,y=50,height=24) 
 CedulaResponsable.place(x=50,y=127)
 #-----------------------------------------------------------------------------------------------------
+
+
+# Desabilitar campos de texto
+#-----------------------------------------------------------------------------------------------------
+ResponsableTarea.config(state="readonly")
+CedulaResponsable.config(state="readonly")
+#-----------------------------------------------------------------------------------------------------
+
 
 #-----------------------------------------------------------------------------------------------------
 #texto de area
@@ -173,8 +236,9 @@ combo_estatus.place(x=400,y=130,height=28)
 combo_estatus.config(width=33,justify="center",font=("Roboto condensed Light", 13))
 # -------------------------------------------------------------------------------------------------------
 
-#combo box para la fecha fin
 
+#combo box para la fecha fin
+#-----------------------------------------------------------------------------------------------------
 #ComboBox para el día
 combo_dia_fin = ttk.Combobox(frame_2, values=list(range(1, 32)))
 combo_dia_fin.set("Día")
@@ -189,19 +253,17 @@ combo_mes_fin.place(x=50,y=50)
 combo_año_fin = ttk.Combobox(frame_2, values=list(range(2023, 2100)))
 combo_año_fin.set("Año")
 combo_año_fin.place(x=50,y=100)
+#-----------------------------------------------------------------------------------------------------
 
-
-# #-----------------------------------------------------------------------------------------------------
 
 #botones.
-
+#-----------------------------------------------------------------------------------------------------
 #boton para agregar tareas
 agregar = Button(raiz,text="agregar Tarea",command=obtener_fecha)
 agregar.config(height=1,width=20, cursor="hand2")
 agregar.place(x=500,y=650)
 
-#boton pararegresar
-regresar = Button(raiz,text="Regresar",command=regresar)
-regresar.config(height=1,width=20, cursor="hand2")
-regresar.place(x=300,y=650)
+
+#-----------------------------------------------------------------------------------------------------
+
 raiz.mainloop()

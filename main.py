@@ -1,6 +1,9 @@
 #Menu principal
 from tkinter import *
 from subprocess import call
+import subprocess
+import sys
+
 raiz = Tk()
 raiz.title("Menu Principal")
 ancho_ventana = 1200
@@ -8,6 +11,14 @@ alto_ventana = 720
 raiz.resizable(0,0)
 #-----------------------------------------------------------------------------------------------------
 #Funciones
+Usuario = ''
+Contraseña = ''
+if __name__ == "__main__":
+    # Recibir los datos de usuario y contraseña como argumentos
+    Usuario = sys.argv[1]
+    Contraseña = sys.argv[2]
+    print(f"Usuario main: {Usuario}")
+    print(f"Contraseña: {Contraseña}")
 
 #-----------------------------------------------------------------------------------------------------
 #funcion para centrar la pestaña
@@ -28,8 +39,9 @@ center_window(raiz,ancho_ventana, alto_ventana)
 
 #funcion para los label
 def fun_1(event):
+    subprocess.Popen(['python', 'tareas.py', Usuario, Contraseña])
     raiz.destroy()
-    call(["python","tareas.py"])
+    
 
 def funsalir(event):
     raiz.destroy()

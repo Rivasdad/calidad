@@ -1,6 +1,7 @@
 from tkinter import *
 from subprocess import call
-
+import subprocess
+import sys
 
 raiz = Tk()
 raiz.title("Menu de tareas")
@@ -11,19 +12,28 @@ raiz.config(bg="white")
 
 
 #funciones
-
+Usuario = ''
+Contraseña = ''
+if __name__ == "__main__":
+    # Recibir los datos de usuario y contraseña como argumentos
+    Usuario = sys.argv[1]
+    Contraseña = sys.argv[2]
+    print(f"Usuario tareas: {Usuario}")
+    print(f"Contraseña: {Contraseña}")
 
 def fun_1(event):
+    subprocess.Popen(['python', 'nuevatarea.py', Usuario, Contraseña])
     raiz.destroy()
-    call(["python","nuevatarea.py"])
+    
 
 def fun_2(event):
     raiz.destroy()
-    call(["python","main.py"])
+    subprocess.Popen(['python', 'main.py', Usuario, Contraseña])
 
 def fun_3(event):
     raiz.destroy()
-    call(["python","buscar_tareas.py"])
+    subprocess.Popen(['python', 'buscar_tareas.py', Usuario, Contraseña])
+    
 
 #funcion para centrar la interfaz grafica
 def center_window(window, width, height):

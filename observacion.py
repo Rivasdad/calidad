@@ -17,73 +17,65 @@ if __name__ == "__main__":
     print(f"Usuario: {Usuario}")
     print(f"Contraseña: {Contraseña}")
     
-def observacion():
-    subprocess.Popen(['python', 'observacion.py', Usuario, Contraseña])
-    ventana.destroy()
-
-
+#funcion para limpiar campos
+#--------------------------------------------------------------------------------------------------------------
 def prueba():
-    # NumeroTarea_txt.delete(0, "end")
-    Nombretarea_txt.delete(0, "end")
+    cod_observacion_txt.delete(0, "end")    
+    cod_tareas_txt.delete(0, "end")
     Responsable_txt.delete(0, "end")
     cedula_txt.delete(0, "end")
-    Estatus_txt.delete(0, "end")
     descripcion.delete("1.0", "end")
-    Avance_txt.delete(0, "end")
-    FechaInicio_txt.delete(0, "end")
-    FechaFin_txt.delete(0, "end")
+#--------------------------------------------------------------------------------------------------------------
+
 
 #funcion para modificar la tarea
+#--------------------------------------------------------------------------------------------------------------
 def modificar():
     try:
         conexion = conectar_a_base_de_datos()
         desc= descripcion.get("1.0", "end-1c")
-        sql="update tareas set nombre_tarea ='"+Nombretarea_txt.get()+"',responsable='"+Responsable_txt.get()+"',estatus_tarea ='"+Estatus_txt.get()+"',porcentaje_avance='"+Avance_txt.get()+"',fecha_culminacion ='"+FechaFin_txt.get()+"', descripcion_tarea = '"+desc+"' where numero_tarea ='"+NumeroTarea_txt.get()+"' "
+        sql="update observacion set responsable = '"+Responsable_txt.get()+"', cedula_responsable ='"+Responsable_txt.get()+"', descripcion = '"+desc+"' where cod_observacion='"+cod_observacion_txt.get()+"'"
         cursor = conexion.cursor() 
         cursor.execute(sql)
-        conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
+        conexion.commit() 
         cursor.close()
         conexion.close()
-        messagebox.showinfo("Tarea Modificada", "Su tarea a sido Modificada correctamente")
+        messagebox.showinfo("Observacion Modificada", "Su Observacion a sido Modificada correctamente")
     except (Exception, psycopg2.DatabaseError) as error: 
-     messagebox.showwarning("Error al modificar", "Error al intentar modificar registro")
+     messagebox.showwarning("Error al modificar", "Error al intentar modificar Observacion")
+#--------------------------------------------------------------------------------------------------------------
 
 
-    #funcion para filtrar las tareas en la tabla
+#funcion para filtrar las observaciones en la tabla
+#--------------------------------------------------------------------------------------------------------------
 def capturar_campos():
     print("")
     
 def filtro():
-    NumeroTarea_bd = NumeroTarea_txt.get()
-    Nombretarea_bd = Nombretarea_txt.get()
+    cod_observacion_bd = cod_observacion_txt.get()
+    cod_tareas_bd = cod_tareas_txt.get()
+    descripcion_bd= descripcion.get("1.0", "end-1c")
     Responsable_db= Responsable_txt.get()
     cedula_bd= cedula_txt.get()
-    Estatus_bd=Estatus_txt.get()
-    descripcion_bd= descripcion.get("1.0", "end-1c")
-    Avance_bd = Avance_txt.get()
-    FechaInicio_bd = FechaInicio_txt.get()
-    FechaFin_bd = FechaFin_txt.get()
-    if NumeroTarea_bd:
+   
+    if cod_observacion_bd:
         conexion = conectar_a_base_de_datos()
-        sql="select * from tareas where numero_tarea ='"+NumeroTarea_bd+"'"
+        sql="select * from observacion"
         cursor = conexion.cursor() 
         cursor.execute(sql)
-        conexion.commit()  # Es importante hacer commit para guardar los cambios en la base de datos
+        conexion.commit()  
         resultado = cursor.fetchone()
 
     if resultado:
-        NumeroTarea_bd, Nombretarea_bd, Responsable_db, cedula_bd, Estatus_bd, descripcion_bd, Avance_bd, FechaInicio_bd, FechaFin_bd = resultado
+        cod_observacion_bd, cod_tareas_bd, descripcion_bd, Responsable_db, cedula_bd= resultado
         prueba()
-        Nombretarea_txt.insert(0,Nombretarea_bd)
+        cod_observacion_txt.insert(0,cod_observacion_bd)
+        cod_tareas_txt.insert(0,cod_tareas_bd)
         Responsable_txt.insert(0,Responsable_db)
         cedula_txt.insert(0,cedula_bd)
-        Estatus_txt.insert(0,Estatus_bd)
-        Avance_txt.insert(0,Avance_bd)
-        FechaInicio_txt.insert(0,FechaInicio_bd)
-        FechaFin_txt.insert(0,FechaFin_bd)
         descripcion.insert(INSERT,descripcion_bd)
     else:
-        print("No se encontraron datos para el número de tarea especificado.")
+        messagebox.showwarning("Error", "error al intentar buscar informacion")
     cursor.close()
     conexion.close()
     print("Todo perfecto")
@@ -92,8 +84,10 @@ def filtro():
 #funcion para regresar al modulo anterior
 #--------------------------------------------------------------------------------------------------------------
 def regresar():
+
+    subprocess.Popen(['python', 'buscar_tareas.py', Usuario, Contraseña])
     ventana.destroy()
-    subprocess.Popen(['python', 'tareas.py', Usuario, Contraseña])
+    
 
 
 
@@ -105,22 +99,22 @@ def capturar_numero_tarea(event):
         fila_seleccionada = seleccion[0]  # Obtiene la primera fila seleccionada
         numero_tarea = tabla.item(fila_seleccionada, "values")[0]  # El índice 0 representa la primera columna
         print(f"Número de Tarea seleccionado: {numero_tarea}")
-        NumeroTarea_txt.delete(0,"end")
-        NumeroTarea_txt.insert(0,numero_tarea)
+        cod_observacion_txt.delete(0,"end")
+        cod_observacion_txt.insert(0,numero_tarea)
 #--------------------------------------------------------------------------------------------------------------        
 
 
 #funcion para buscar una tarea especifica
 #--------------------------------------------------------------------------------------------------------------
-def obtener_tareas():
+def Listar_tabla():
     conexion = conectar_a_base_de_datos()
     cursor = conexion.cursor()
-    if NumeroTarea_txt.get():
-        cursor.execute("SELECT numero_tarea, nombre_tarea, responsable, cedula_responsable, estatus_tarea, porcentaje_avance, fecha_inicio, fecha_culminacion FROM tareas where numero_tarea = '"+NumeroTarea_txt.get()+"'")
+    if cod_observacion_txt.get():
+        cursor.execute("SELECT cod_observacion, observador, cedula_observador, nombre_responsable, fk_tareas, fk_cedula FROM observacion where cod_observacion = '"+cod_observacion_txt.get()+"'")
     elif cedula_txt.get():
-        cursor.execute("SELECT numero_tarea, nombre_tarea, responsable, cedula_responsable, estatus_tarea, porcentaje_avance, fecha_inicio, fecha_culminacion FROM tareas where cedula_responsable ='"+cedula_txt.get()+"'")
+        cursor.execute("SELECT cod_observacion, observador, cedula_observador, nombre_responsable, fk_tareas, fk_cedula FROM observacion FROM observacion where fk_cedula ='"+cedula_txt.get()+"'")
     else:
-       cursor.execute("SELECT numero_tarea, nombre_tarea, responsable, cedula_responsable, estatus_tarea, porcentaje_avance, fecha_inicio, fecha_culminacion FROM tareas") 
+       cursor.execute("SELECT cod_observacion, observador, cedula_observador, nombre_responsable, fk_tareas, fk_cedula  FROM observacion") 
     tareas = cursor.fetchall()
     conexion.close()
 
@@ -133,7 +127,7 @@ def obtener_tareas():
         tabla.insert("", "end", values=tarea)
 
 ventana = Tk()
-ventana.title("Tabla de Tareas")
+ventana.title("Observaciones o Incidencias")
 #--------------------------------------------------------------------------------------------------------------
 
 
@@ -166,29 +160,25 @@ center_window(ventana,ancho_ventana, alto_ventana)
 
 # Crear un Treeview
 #--------------------------------------------------------------------------------------------------------------
-tabla = ttk.Treeview(ventana, columns=("Número de Tarea", "Nombre de Tarea", "Responsable", "Cédula del Responsable", "Estatus de Tarea", "Porcentaje de Avance", "Fecha de Inicio", "Fecha de Culminación"))
+tabla = ttk.Treeview(ventana, columns=("N° Observacion", "Observador", "Cedula Observador", "Nombre Responsable", "N° tarea","N° Cedula"))
 
 # Definir las columnas
-tabla.heading("#1", text="Número Tarea")
-tabla.heading("#2", text="Nombre Tarea")
-tabla.heading("#3", text="Responsable")
-tabla.heading("#4", text="Cédula")
-tabla.heading("#5", text="Estatus")
-tabla.heading("#6", text="Porcentaje Avance")
-tabla.heading("#7", text="Fecha Inicio")
-tabla.heading("#8", text="Fecha Culminación")
+tabla.heading("#1", text="N° Observacion")
+tabla.heading("#2", text="Observador")
+tabla.heading("#3", text="Cedula Observador")
+tabla.heading("#4", text="Nombre Responsable")
+tabla.heading("#5", text="N° tarea")
+tabla.heading("#6", text="N° Cedula")
+
 
 # Ajustar el ancho de las columnas
 tabla.column("#0", width=0, stretch=NO)
 tabla.column("#1", width=60)  # Número de Tarea
-tabla.column("#2", width=200)  # Nombre de Tarea (más pequeño)
+tabla.column("#2", width=100)  # Nombre de Tarea (más pequeño)
 tabla.column("#3", width=100)  # Responsable
 tabla.column("#4", width=100)  # Cédula del Responsable (más pequeño)
-tabla.column("#5", width=100)  # Estatus de Tarea (más pequeño)
-tabla.column("#6", width=100)  # Porcentaje de Avance (más pequeño)
-tabla.column("#7", width=150)  # Fecha de Inicio
-tabla.column("#8", width=150)  # Fecha de Culminación
-
+tabla.column("#5", width=100)
+tabla.column("#6", width=100)
 
 tabla.place(x=0,y=0,width=1200)
 tabla.configure(height=13)
@@ -197,8 +187,8 @@ tabla.configure(height=13)
 
 # Botón para obtener las tareas de la base de datos y mostrarlas en la tabla
 #--------------------------------------------------------------------------------------------------------------
-boton = ttk.Button(ventana, text="Listar Tabla", cursor="hand2" ,command=obtener_tareas)
-boton.place(x=0,y=600)
+listar_tabla = ttk.Button(ventana, text="Listar Tabla", cursor="hand2" ,command=Listar_tabla)
+listar_tabla.place(x=0,y=600)
 
 regresar_b = ttk.Button(ventana, text="Regresar", cursor="hand2",command=regresar)
 regresar_b.place(x=100,y=600)
@@ -213,8 +203,7 @@ limpiar = ttk.Button(ventana, text="Limpiar Campos", cursor="hand2",command=prue
 limpiar.place(x=300,y=600)
 
 
-Observacion = ttk.Button(ventana, text="Observaciones o Bloqueantes", cursor="hand2",command=observacion)
-Observacion.place(x=550,y=600)
+
 
 tabla.bind("<<TreeviewSelect>>", capturar_numero_tarea)
 #--------------------------------------------------------------------------------------------------------------
@@ -222,82 +211,62 @@ tabla.bind("<<TreeviewSelect>>", capturar_numero_tarea)
 
 #labels
 #--------------------------------------------------------------------------------------------------------------
-NumeroTarea = Label(ventana,text="Numero Tarea")
-Nombretarea = Label(ventana,text="Nombre Tarea")
-Responsable = Label(ventana,text="Responsable")
-cedula = Label(ventana,text="Cedula")
-Estatus = Label(ventana,text="Estatus")
-Avance = Label(ventana,text="Avance")
-FechaInicio = Label(ventana,text="Fecha Inicio")
-FechaFin = Label(ventana,text="Fecha Culminacion")
+cod_observacion_label = Label(ventana,text="Numero Tarea")
+cod_tareas_label = Label(ventana,text="Nombre Tarea")
+Responsable_label = Label(ventana,text="Responsable")
+cedula_label = Label(ventana,text="Cedula")
+descripcion_label = Label(ventana,text="Estatus")
+
 #--------------------------------------------------------------------------------------------------------------
 
 
 #configuracion labels
 #--------------------------------------------------------------------------------------------------------------
-NumeroTarea.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13)) #numero tarea
-NumeroTarea.place(x=0,y=300)
+cod_observacion_label.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13)) #numero tarea
+cod_observacion_label.place(x=0,y=300)
 
-Nombretarea.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
-Nombretarea.place(x=150,y=300)
+cod_tareas_label.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
+cod_tareas_label.place(x=150,y=300)
 
-Responsable.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
-Responsable.place(x=0,y=380)
+Responsable_label.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
+Responsable_label.place(x=0,y=380)
 
-cedula.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
-cedula.place(x=180,y=380)
+cedula_label.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
+cedula_label.place(x=180,y=380)
 
-Estatus.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
-Estatus.place(x=19,y=450)
+descripcion_label.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
+descripcion_label.place(x=19,y=450)
 
-Avance.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
-Avance.place(x=173,y=450)
-
-FechaInicio.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
-FechaInicio.place(x=0,y=515)
-
-FechaFin.config(fg="white",bg="#002D64",font=("Roboto condensed Light", 13))
-FechaFin.place(x=130,y=515)
 #--------------------------------------------------------------------------------------------------------------
 
 
 #campos de texto
 #--------------------------------------------------------------------------------------------------------------
-NumeroTarea_txt = Entry(ventana,width=12,justify="center",font=("Roboto condensed Light", 13))
+cod_observacion_txt = Entry(ventana,width=12,justify="center",font=("Roboto condensed Light", 13))
 
-Nombretarea_txt= Entry(ventana,width=20,justify="center",font=("Roboto condensed Light", 13))
+cod_tareas_txt= Entry(ventana,width=20,justify="center",font=("Roboto condensed Light", 13))
 
 Responsable_txt= Entry(ventana,width=12,justify="center",font=("Roboto condensed Light", 13))
 
 cedula_txt = Entry(ventana,width=20,justify="center",font=("Roboto condensed Light", 13))
 
-Estatus_txt = Entry(ventana,width=12,justify="center",font=("Roboto condensed Light", 13))
 
-Avance_txt = Entry(ventana,width=20,justify="center",font=("Roboto condensed Light", 13))
 
-FechaInicio_txt = Entry(ventana,width=12,justify="center",font=("Roboto condensed Light", 13))
 
-FechaFin_txt = Entry(ventana,width=20,justify="center",font=("Roboto condensed Light", 13))
 #--------------------------------------------------------------------------------------------------------------
 
 
 # Conficuracion de campos de texto
 #--------------------------------------------------------------------------------------------------------------
-NumeroTarea_txt.place(x=0,y=325)
+cod_observacion_txt.place(x=0,y=325)
 
-Nombretarea_txt.place(x=118,y=325)
+cod_tareas_txt.place(x=118,y=325)
 
 Responsable_txt.place(x=0,y=405)
 
 cedula_txt.place(x=119,y=405)
 
-Estatus_txt.place(x=0,y=475)
 
-Avance_txt.place(x=119,y=475)
-
-FechaInicio_txt.place(x=0,y=540)
-
-FechaFin_txt.place(x=119,y=540)
 #--------------------------------------------------------------------------------------------------------------
 
 

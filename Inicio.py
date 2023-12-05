@@ -1,6 +1,9 @@
 from tkinter import *
 from subprocess import call
-
+import subprocess
+from conexion import conectar_a_base_de_datos
+import psycopg2
+from tkinter import messagebox
 
 raiz = Tk()
 raiz.title("Inicio de sesion")
@@ -77,10 +80,26 @@ def abrir_registro():
 
 #Funcion para registrarme
 def inicio_sesion():
-    # Cierra la ventana actual
-    raiz.destroy()
-    # Abre el archivo registro.py en una nueva ventana
-    call(["python", "main.py"])
+    Usuario = usuario_txt.get()
+    Contraseña = contraseña_txt.get()
+    try:
+        conexion = conectar_a_base_de_datos()
+        if conexion:
+            cursor = conexion.cursor() 
+            sql ="select contraseña, usuario from usuario where usuario = '"+Usuario+"'"
+            cursor.execute(sql)
+            conexion.commit()  
+            resultado = cursor.fetchone()
+            cursor.close()
+            conexion.close()
+            if resultado:
+                subprocess.Popen(['python', 'main.py', Usuario, Contraseña])
+                raiz.destroy()
+            else:
+                messagebox.showwarning("Error", "Credenciales Erradas")        
+    except(Exception, psycopg2.DatabaseError) as error: 
+        messagebox.showwarning("Usuario no encontrado", "Credenciales Erradas")
+    
 
 
 
